@@ -52,6 +52,8 @@ def convert_dict_to_hdf5_attributes(item, attrs_dict):
         of the attribute.
 
     """
+    if not isinstance(attrs_dict, dict):  # Must be a dict!
+        raise TypeError("attrs_dict must be a dictionary") 
 
     # Sort into alphabetical order
     attributes = sorted(attrs_dict.items())
@@ -117,4 +119,8 @@ def write_particle_ids_to_file(
 
             # Create the Particle IDs dataset and write attributes
             pIDs_dataset = output.create_dataset('ParticleIDs', data=particle_ids)
-            convert_dict_to_hdf5_attributes(pIDs_dataset, dataset_attrs)
+            if dataset_attrs is not None:
+                if not isinstance(dataset_attrs, dict):  # Must be a dict!
+                    raise TypeError("dataset_attrs must be a dictionary")
+                else:
+                    convert_dict_to_hdf5_attributes(pIDs_dataset, dataset_attrs)
