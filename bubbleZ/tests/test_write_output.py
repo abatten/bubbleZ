@@ -5,24 +5,24 @@ import numpy as np
 from ..pipeline.utils import FileAlreadyExists
 from ..pipeline import write_output
 
+# Global Variables
+TEST_DIR_PATH = os.path.abspath(os.path.dirname(__file__))     # Path to tests directory
+
+partIDs_test_output = os.path.join(TEST_DIR_PATH, "partIDs_test_output.h5")
+
+particle_ids = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+particle_ids_set = set([1, 2, 3, 4, 5, 6, 7, 8, 9])
+
 
 def test_writing_particle_ids_to_existing_file_without_overwrite_should_fail():
-    filename = "test_particleIDs.h5"
-    file = open(filename, "a")
+    file = open(partIDs_test_output, "a")
     file.close()
 
-    particle_ids = set([1,2,3,4,5,6,7,8,9])
-
     with pytest.raises(FileAlreadyExists):
-        write_output.write_particle_ids_to_file(filename, particle_ids)
-    
-    os.remove(filename)
+        write_output.write_particle_ids_to_file(partIDs_test_output, particle_ids)
+    os.remove(partIDs_test_output)
 
-def test_writing_particle_ids_to_file():
-    filename = "test_particleIDs.h5"
-
-    particle_ids = np.array([1,2,3,4,5,6,7,8,9])
-
+def test_writing_particle_ids_to_file_with_all_attributes():
     header_info = {
         "Criteria": "Metallicity",
         "Value" : 0.001,
@@ -41,9 +41,10 @@ def test_writing_particle_ids_to_file():
     }
  
     dataset_attrs = {
-        "VarDescription": "The unique particle identifier that satified the selection criteria."
+        "VarDescription": "Unique particle identifier."
     }
 
-    write_output.write_particle_ids_to_file(filename, particle_ids, dataset_attrs=dataset_attrs, group_attrs=group_attrs)
-    
-    #os.remove(filename)
+    write_output.write_particle_ids_to_file(partIDs_test_output, particle_ids, 
+        dataset_attrs=dataset_attrs, group_attrs=group_attrs)
+
+    os.remove(partIDs_test_output)
