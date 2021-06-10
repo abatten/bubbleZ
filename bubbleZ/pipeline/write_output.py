@@ -32,7 +32,6 @@ def convert_dict_to_group_in_hdf5_file(hdf5_file, attrs_dict, group_name):
 
     hdf5_file.create_group(group_name)
     group = hdf5_file[group_name]
-
     convert_dict_to_hdf5_attributes(group, attrs_dict)
 
 
