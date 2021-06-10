@@ -40,7 +40,7 @@ def convert_dict_to_hdf5_attributes(item, attrs_dict):
     """
     Adds attributes from a dictionary to a HDF5 dataset or group. 
     The attributes will be automatically sorted into alphabetical
-     order.
+    order.
 
     Parameters
     ----------
@@ -48,8 +48,8 @@ def convert_dict_to_hdf5_attributes(item, attrs_dict):
         The dataset or group to attach the attributes.
 
     attrs_dict: dict
-        The attributes of the data set or group. The key is the name of the
-        attribute.
+        The attributes of the data set or group. The key is the name 
+        of the attribute.
 
     """
 
@@ -59,7 +59,10 @@ def convert_dict_to_hdf5_attributes(item, attrs_dict):
         item.attrs[key] = value
 
 
-def write_particle_ids_to_file(filename, particle_ids, overwrite=False, dataset_attrs=None, group_attrs=None):
+def write_particle_ids_to_file(
+    filename, particle_ids, overwrite=False, 
+    dataset_attrs=None, group_attrs=None
+    ):
     """
     Checks to see if the file already exists. If so, it will skip
     unless `overwrite=True`.
@@ -67,8 +70,9 @@ def write_particle_ids_to_file(filename, particle_ids, overwrite=False, dataset_
     Parameters:
     -----------
     filename: str
+        The name of the output HDF5 file.
 
-    particle_ids: set
+    particle_ids: set or np.ndarray
         Contains the particle IDs that are to be written to file.
 
     overwrite: bool, optional
@@ -76,14 +80,15 @@ def write_particle_ids_to_file(filename, particle_ids, overwrite=False, dataset_
         Default: False. 
 
     dataset_attrs: dict, optional
-        Attrubutes of the particle_ids dataset. These attributes are a
+        Attributes of the `particle_ids` dataset. These attributes are a
         dictionary with the key representing the name of the attribute.
+        Default: None
 
     group_attrs: dict, optional
         Group attributes to be written to the file. These `group_attrs`
         must be a dict with the key representing the name of the new 
-        group and the value another dictionary containing all the attributes
-        of the group. Default: None
+        group and the value another dictionary containing all the 
+        attributes of the group. Default: None
 
     """
 
@@ -106,13 +111,10 @@ def write_particle_ids_to_file(filename, particle_ids, overwrite=False, dataset_
                     for group_name, attrs in group_attrs:
                         convert_dict_to_group_in_hdf5_file(output, attrs, group_name)
 
+            # Since you can't save a set to a HDF5 dataset, convert to np.array
+            if isinstance(particle_ids, set):
+                particle_ids = np.array(list(particle_ids))
+
             # Create the Particle IDs dataset and write attributes
             pIDs_dataset = output.create_dataset('ParticleIDs', data=particle_ids)
             convert_dict_to_hdf5_attributes(pIDs_dataset, dataset_attrs)
-
-
-
-            
-
-
-
