@@ -25,9 +25,6 @@ plt.rc("grid", linestyle=":")
 plt.rc("grid", alpha=0.8)
 
 
-
-
-
 def plot_scatter_density(x, y, ax=None, **kwargs):
     if ax is None:
         fig = plt.figure()
